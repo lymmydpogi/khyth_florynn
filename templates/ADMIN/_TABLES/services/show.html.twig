@@ -68,18 +68,18 @@
                 </div>
 
                 <div class="info-card full-width">
-                    <div class="info-label">Tools Used</div>
+                    <div class="info-label">Flowers & Materials Used</div>
                     <div class="info-value">
                         {{ service.toolsUsed }}
                     </div>
                 </div>
-
-
+            </div>
         </div>
 
-        <!-- Back Button -->
+        <!-- Action Buttons -->
         <div class="action-buttons">
-            <a href="{{ path('app_services_index') }}" class="btn btn-back">← Back to Services</a>
+            <a href="{{ path('app_services_index') }}" class="btn btn-back">Back to Services</a>
+            <a href="{{ path('app_services_edit', {'id': service.id}) }}" class="btn btn-edit">Edit Service</a>
         </div>
 
     </div>

@@ -179,6 +179,16 @@ class Order
         if (!in_array($status, self::STATUSES)) {
             throw new \InvalidArgumentException("Invalid order status: $status");
         }
+        
+        // Validate status consistency with payment status
+        if ($status === self::STATUS_COMPLETED && $this->paymentStatus === self::PAYMENT_STATUS_PENDING) {
+            throw new \InvalidArgumentException("Cannot set order status to Completed while payment status is Pending.");
+        }
+        
+        if ($status === self::STATUS_CANCELED && $this->paymentStatus === self::PAYMENT_STATUS_COMPLETED) {
+            throw new \InvalidArgumentException("Cannot cancel an order with completed payment. Please refund first.");
+        }
+        
         $this->status = $status;
         return $this;
     }
@@ -251,6 +261,12 @@ class Order
         if (!in_array($paymentStatus, self::PAYMENT_STATUSES)) {
             throw new \InvalidArgumentException("Invalid payment status: $paymentStatus");
         }
+        
+        // Validate payment status consistency with order status
+        if ($paymentStatus === self::PAYMENT_STATUS_COMPLETED && $this->status === self::STATUS_CANCELED) {
+            throw new \InvalidArgumentException("Cannot set payment status to Completed for a canceled order.");
+        }
+        
         $this->paymentStatus = $paymentStatus;
         return $this;
     }

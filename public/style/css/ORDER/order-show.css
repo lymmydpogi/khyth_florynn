@@ -15,9 +15,9 @@
 .header-section {
     background: #ffffff;
     padding: 28px 32px;
-    border-radius: 12px;
+    border-radius: 0;
     margin-bottom: 28px;
-    border-left: 4px solid #8b5cf6;
+    border-left: 4px solid #8B1A2A;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
@@ -37,7 +37,7 @@
 .details-card {
     background: #ffffff;
     padding: 32px;
-    border-radius: 12px;
+    border-radius: 0;
     border: 1px solid #e5e7eb;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }

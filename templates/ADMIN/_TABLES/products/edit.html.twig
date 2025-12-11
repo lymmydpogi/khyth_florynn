@@ -1,0 +1,100 @@
+{% extends 'ADMIN/base.html.twig' %}
+
+{% block title %}Edit Product{% endblock %}
+{% block page_title %}Edit Product{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('style/css/PRODUCT/product-form.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <div class="content-container">
+
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1>Edit Product</h1>
+            <p>Update product information</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            {{ form_start(form, {'attr': {'class': 'product-form', 'enctype': 'multipart/form-data'}}) }}
+            <div class="form-grid">
+
+                <!-- Product Name -->
+                <div class="form-group">
+                    <label>Product Name</label>
+                    {{ form_widget(form.name) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label>Category</label>
+                    {{ form_widget(form.category) }}
+                    {{ form_errors(form.category) }}
+                </div>
+
+                <!-- Price -->
+                <div class="form-group">
+                    <label>Price (₱)</label>
+                    {{ form_widget(form.price) }}
+                    {{ form_errors(form.price) }}
+                </div>
+
+                <!-- Stock -->
+                <div class="form-group">
+                    <label>Stock Quantity</label>
+                    {{ form_widget(form.stock) }}
+                    {{ form_errors(form.stock) }}
+                </div>
+
+                <!-- Status -->
+                <div class="form-group">
+                    <label>Status</label>
+                    {{ form_widget(form.status) }}
+                    {{ form_errors(form.status) }}
+                </div>
+
+                <!-- Current Image -->
+                {% if product.image %}
+                <div class="form-group">
+                    <label>Current Image</label>
+                    <div class="current-image">
+                        <img src="{{ asset('uploads/products/' ~ product.image) }}" alt="{{ product.name }}">
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Image Upload -->
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>{% if product.image %}Update Product Image{% else %}Product Image{% endif %}</label>
+                    {{ form_widget(form.imageFile) }}
+                    {{ form_errors(form.imageFile) }}
+                    <small class="form-help">Leave empty to keep current image. Upload a new image to replace it.</small>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Description</label>
+                    {{ form_widget(form.description) }}
+                    {{ form_errors(form.description) }}
+                </div>
+
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="{{ path('app_products_index') }}" class="btn-back">Cancel</a>
+                <button type="submit" class="btn-submit">Update Product</button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

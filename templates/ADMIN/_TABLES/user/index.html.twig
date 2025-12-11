@@ -11,10 +11,10 @@
 {% endblock %}
 
 {% block body %}
-<section class="hero-section">
+<div class="page-header">
     <h1>User Management Dashboard</h1>
     <p>Manage all users, track activity, communicate, generate reports, and ensure security from one place.</p>
-</section>
+</div>
 
 <section class="client-table-section">
     <h2 class="section-title">All Users</h2>
@@ -91,17 +91,22 @@
                 pageLength: 10,
                 lengthMenu: [5, 10, 20, 50],
                 order: [[0, 'desc']],
+                pagingType: "simple_numbers",
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search users...",
+                    paginate: {
+                        previous: "‹",
+                        next: "›"
+                    },
+                    info: "Showing _START_ to _END_ of _TOTAL_ users",
+                    infoEmpty: "No users available",
+                    zeroRecords: "No matching users found",
+                    lengthMenu: "Show _MENU_ entries"
+                },
                 columnDefs: [
                     { orderable: false, targets: -1 } // Actions column
-                ],
-                language: {
-                    search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ users",
-                    infoEmpty: "Showing 0 to 0 of 0 users",
-                    infoFiltered: "(filtered from _MAX_ total users)",
-                    paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
-                }
+                ]
             });
 
             // SweetAlert2 flash messages
@@ -109,9 +114,16 @@
                 {% for message in messages %}
                     Swal.fire({
                         title: '{{ label|capitalize }}',
-                        text: '{{ message }}',
-                        icon: '{{ label == "success" ? "success" : "error" }}',
-                        confirmButtonText: 'OK'
+                        text: '{{ message|e('js') }}',
+                        icon: '{{ label == "success" ? "success" : (label == "warning" ? "warning" : (label == "info" ? "info" : "error")) }}',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'florynn-swal-popup',
+                            title: 'florynn-swal-title',
+                            content: 'florynn-swal-content',
+                            confirmButton: 'florynn-swal-confirm'
+                        }
                     });
                 {% endfor %}
             {% endfor %}

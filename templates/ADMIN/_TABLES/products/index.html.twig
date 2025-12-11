@@ -1,0 +1,140 @@
+{% extends 'ADMIN/base.html.twig' %}
+
+{% block title %}Products{% endblock %}
+{% block page_title %}Products{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="{{ asset('style/css/PRODUCT/product.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <h1>Product Management</h1>
+    <p>Manage products, inventory, pricing, and availability</p>
+</div>
+
+<h2 class="section-title">All Products</h2>
+<div class="btn-container">
+    <a href="{{ path('app_products_new') }}" class="btn-create">
+        Add New Product
+    </a>
+</div>
+
+<section class="product-table-section">
+    <div class="table-container">
+        <table class="table" id="productsTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price (₱)</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>
+                            {% if product.image %}
+                                <img src="{{ asset('uploads/products/' ~ product.image) }}" 
+                                     alt="{{ product.name }}" 
+                                     class="product-thumbnail">
+                            {% else %}
+                                <div class="no-image">No Image</div>
+                            {% endif %}
+                        </td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>₱{{ product.price|number_format(2, '.', ',') }}</td>
+                        <td>
+                            <span class="stock-badge {{ product.stock <= 5 ? 'low-stock' : '' }}">
+                                {{ product.stock }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-badge {{ product.status|lower|replace({'_': '-'}) }}">
+                                {{ product.status|replace({'_': ' '})|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ path('app_products_show', {'id': product.id}) }}" class="btn-action btn-view">View</a>
+                            <a href="{{ path('app_products_edit', {'id': product.id}) }}" class="btn-action btn-edit">Edit</a>
+                            {{ include('ADMIN/_TABLES/products/_delete_form.html.twig') }}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="empty-state">No products found. Create your first product!</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable
+            $('#productsTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                pageLength: 10,
+                lengthMenu: [5, 10, 20, 50],
+                order: [[0, 'desc']],
+                pagingType: "simple_numbers",
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search products...",
+                    paginate: {
+                        previous: "‹",
+                        next: "›"
+                    },
+                    info: "Showing _START_ to _END_ of _TOTAL_ products",
+                    infoEmpty: "No products available",
+                    zeroRecords: "No matching products found",
+                    lengthMenu: "Show _MENU_ entries"
+                },
+                columnDefs: [
+                    { orderable: false, targets: [1, -1] } // Image and Actions columns
+                ]
+            });
+
+            // Flash messages
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    Swal.fire({
+                        title: '{{ label|capitalize }}',
+                        text: '{{ message|e('js') }}',
+                        icon: '{{ label == "success" ? "success" : (label == "warning" ? "warning" : (label == "info" ? "info" : "error")) }}',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'florynn-swal-popup',
+                            title: 'florynn-swal-title',
+                            content: 'florynn-swal-content',
+                            confirmButton: 'florynn-swal-confirm'
+                        }
+                    });
+                {% endfor %}
+            {% endfor %}
+        });
+    </script>
+{% endblock %}
+

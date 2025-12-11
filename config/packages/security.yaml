@@ -42,7 +42,8 @@ security:
         - { path: ^/user, roles: ROLE_ADMIN }
         - { path: ^/analytics, roles: ROLE_ADMIN}
         - { path: ^/home, roles: ROLE_ADMIN }
+        - { path: ^/staff/dashboard, roles: ROLE_STAFF }
+        - { path: ^/products, roles: [ROLE_ADMIN, ROLE_STAFF] }
         - { path: ^/orders, roles: [ROLE_ADMIN, ROLE_STAFF] }
         - { path: ^/services, roles: [ROLE_ADMIN, ROLE_STAFF] }
-        - { path: ^/settings, roles: [ROLE_ADMIN, ROLE_STAFF] }
         - { path: ^/, roles: ROLE_STAFF }

@@ -48,13 +48,56 @@ final class OrderController extends AbstractController
 
         // ✅ Valid
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($order);
-            $entityManager->flush();
+            try {
+                // Additional validation: Ensure order date is not in the past
+                $today = new \DateTimeImmutable('today');
+                if ($order->getOrderDate() < $today) {
+                    $this->addFlash('error', 'Order date cannot be set before today. Please select today or a future date.');
+                    return $this->render('ADMIN/_TABLES/order/new.html.twig', [
+                        'order' => $order,
+                        'form'  => $form,
+                    ]);
+                }
 
-            $this->updateUserStatus($order->getUser(), $entityManager);
+                // Ensure service is active
+                if (!$order->getService()) {
+                    $this->addFlash('error', 'Please select a service for this order.');
+                    return $this->render('ADMIN/_TABLES/order/new.html.twig', [
+                        'order' => $order,
+                        'form'  => $form,
+                    ]);
+                }
 
-            $this->addFlash('success', 'Order created successfully.');
-            return $this->redirectToRoute('app_order_index');
+                if ($order->getService()->getStatus() !== 'active') {
+                    $this->addFlash('error', 'Cannot create order with an inactive service. Please select an active service.');
+                    return $this->render('ADMIN/_TABLES/order/new.html.twig', [
+                        'order' => $order,
+                        'form'  => $form,
+                    ]);
+                }
+
+                // Validate delivery date if provided
+                if ($order->getDeliveryDate() && $order->getDeliveryDate() < $order->getOrderDate()) {
+                    $this->addFlash('error', 'Delivery date cannot be earlier than the order date.');
+                    return $this->render('ADMIN/_TABLES/order/new.html.twig', [
+                        'order' => $order,
+                        'form'  => $form,
+                    ]);
+                }
+
+                $entityManager->persist($order);
+                $entityManager->flush();
+
+                $this->updateUserStatus($order->getUser(), $entityManager);
+
+                $this->addFlash('success', 'Order created successfully.');
+                return $this->redirectToRoute('app_order_index');
+            } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+                $this->addFlash('error', 'Database connection error. Please try again later or contact support.');
+            } catch (\Exception $e) {
+                error_log('Order creation error: ' . $e->getMessage());
+                $this->addFlash('error', 'An unexpected error occurred while creating the order. Please try again or contact support if the problem persists.');
+            }
         }
 
         return $this->render('ADMIN/_TABLES/order/new.html.twig', [
@@ -100,8 +143,37 @@ final class OrderController extends AbstractController
 
         // ✅ Valid
         if ($form->isSubmitted() && $form->isValid()) {
+            // Additional validation: Ensure order date is not in the past (for new orders)
+            if ($order->getOrderDate()) {
+                $today = new \DateTimeImmutable('today');
+                if ($order->getOrderDate() < $today) {
+                    $this->addFlash('error', 'Order date cannot be set before today.');
+                    return $this->render('ADMIN/_TABLES/order/edit.html.twig', [
+                        'order' => $order,
+                        'form' => $form,
+                    ]);
+                }
+            }
 
-            $entityManager->flush();
+            // Ensure service is active if changed
+            if ($order->getService() && $order->getService()->getStatus() !== 'active') {
+                $this->addFlash('error', 'Cannot update order with inactive service.');
+                return $this->render('ADMIN/_TABLES/order/edit.html.twig', [
+                    'order' => $order,
+                    'form' => $form,
+                ]);
+            }
+
+            // Validate status consistency
+            try {
+                $entityManager->flush();
+            } catch (\InvalidArgumentException $e) {
+                $this->addFlash('error', $e->getMessage());
+                return $this->render('ADMIN/_TABLES/order/edit.html.twig', [
+                    'order' => $order,
+                    'form' => $form,
+                ]);
+            }
 
             $this->updateUserStatus($order->getUser(), $entityManager);
 

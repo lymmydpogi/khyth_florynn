@@ -4,7 +4,7 @@
     padding: 32px 28px 40px;
     margin-bottom: 60px;
     background: #ffffff;
-    border-radius: 18px;
+    border-radius: 0;
     border: 1px solid #ececec;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
@@ -49,7 +49,7 @@
 .stat-card {
     background: #ffffff;
     padding: 28px;
-    border-radius: 16px;
+    border-radius: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
     transition: all 0.2s;
     border: 1px solid #f0f0f0;
@@ -122,7 +122,7 @@
 }
 
 .btn-primary {
-    background: #6366f1;
+    background: #6B0F1A;
     color: #fff;
     padding: 12px 24px;
     border-radius: 8px;
@@ -166,11 +166,11 @@
 }
 
 .action-button:hover {
-    background: #6366f1;
+    background: #6B0F1A;
     color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(107, 15, 26, 0.2);
+    border-color: #6B0F1A;
 }
 
 /* Responsive */

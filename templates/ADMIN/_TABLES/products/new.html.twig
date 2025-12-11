@@ -1,0 +1,83 @@
+{% extends 'ADMIN/base.html.twig' %}
+
+{% block title %}New Product{% endblock %}
+{% block page_title %}Add New Product{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('style/css/PRODUCT/product-form.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <div class="content-container">
+
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1>Create New Product</h1>
+            <p>Add a new product to your inventory</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            {{ form_start(form, {'attr': {'class': 'product-form', 'enctype': 'multipart/form-data'}}) }}
+            <div class="form-grid">
+
+                <!-- Product Name -->
+                <div class="form-group">
+                    <label>Product Name</label>
+                    {{ form_widget(form.name) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label>Category</label>
+                    {{ form_widget(form.category) }}
+                    {{ form_errors(form.category) }}
+                </div>
+
+                <!-- Price -->
+                <div class="form-group">
+                    <label>Price (₱)</label>
+                    {{ form_widget(form.price) }}
+                    {{ form_errors(form.price) }}
+                </div>
+
+                <!-- Stock -->
+                <div class="form-group">
+                    <label>Stock Quantity</label>
+                    {{ form_widget(form.stock) }}
+                    {{ form_errors(form.stock) }}
+                </div>
+
+                <!-- Image Upload -->
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Product Image</label>
+                    {{ form_widget(form.imageFile) }}
+                    {{ form_errors(form.imageFile) }}
+                    <small class="form-help">Upload a high-quality image of your product (JPEG, PNG, GIF, or WebP, max 5MB)</small>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Description</label>
+                    {{ form_widget(form.description) }}
+                    {{ form_errors(form.description) }}
+                </div>
+
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="{{ path('app_products_index') }}" class="btn-back">Cancel</a>
+                <button type="submit" class="btn-submit">Create Product</button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

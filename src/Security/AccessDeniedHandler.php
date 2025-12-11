@@ -33,7 +33,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     if (!$user) {
         $redirectUrl = $this->router->generate('app_login_index', ['access_denied' => 1]);
     } elseif ($this->security->isGranted('ROLE_STAFF') && !$this->security->isGranted('ROLE_ADMIN')) {
-        $redirectUrl = $this->router->generate('app_services_index', ['access_denied' => 1]);
+        $redirectUrl = $this->router->generate('app_staff_dashboard_index', ['access_denied' => 1]);
     } else {
         $redirectUrl = $this->router->generate('app_home_index', ['access_denied' => 1]);
     }

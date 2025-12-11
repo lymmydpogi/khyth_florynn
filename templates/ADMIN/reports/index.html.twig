@@ -11,10 +11,10 @@
 
 {% block body %}
 <!-- Hero Section -->
-<section class="hero-section">
+<div class="page-header">
     <h1>Reports Dashboard</h1>
     <p>Monitor users, orders, services, and revenue from a single, organized interface.</p>
-</section>
+</div>
 
 <!-- Stats Section -->
 <section class="stats-section">
@@ -95,22 +95,22 @@
                 pageLength: 10,
                 lengthMenu: [5, 10, 20, 50],
                 order: [[0, 'desc']],
+                pagingType: "simple_numbers",
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search reports...",
+                    paginate: {
+                        previous: "‹",
+                        next: "›"
+                    },
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "No entries available",
+                    zeroRecords: "No matching entries found",
+                    lengthMenu: "Show _MENU_ entries"
+                },
                 columnDefs: [
                     { orderable: false, targets: -1 }
-                ],
-                language: {
-                    search: "Search:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                    infoEmpty: "Showing 0 to 0 of 0 entries",
-                    infoFiltered: "(filtered from _MAX_ total entries)",
-                    paginate: {
-                        first: "First",
-                        last: "Last",
-                        next: "Next",
-                        previous: "Previous"
-                    }
-                }
+                ]
             });
         });
     </script>

@@ -1,48 +1,132 @@
-{% block stylesheets %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Florynn</title>
+    
+    {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('style/css/DASHBOARD/login.css') }}">
-{% endblock %}
+    <link rel="stylesheet" href="{{ asset('style/css/DASHBOARD/flash-messages.css') }}">
+    {% endblock %}
+</head>
 
 {% block body %}
-<div class="login-body">
-    <div class="login-logo">
-        <img src="{{ asset('images/avatars/cd_logo.png') }}" alt="Campana Designs Logo" class="logo-img">
+<body>
+    <!-- Left Side - Branding -->
+    <div class="login-brand">
+        <div class="logo-container">
+            <img src="{{ asset('images/florynn.png') }}" alt="Florynn Logo" class="logo-img">
+        </div>
+        <div class="brand-text">
+            <h2>Join Florynn</h2>
+            <p>Start your creative journey today. Create beautiful designs with Campana Designs.</p>
+        </div>
     </div>
 
-    <div class="login-form">
-        <h1>Create an account</h1>
-        <p>Fill in your details to get started</p>
+    <!-- Right Side - Registration Form -->
+    <div class="login-form-container">
+        <div class="form-header">
+            <h1>Create Account</h1>
+            <p>Fill in your details to get started</p>
+        </div>
 
-        {{ form_start(registrationForm) }}
+        {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            {# Display form-level errors (like UniqueEntity) #}
+            {% if registrationForm.vars.errors|length > 0 %}
+                <div class="form-error" style="margin-bottom: 24px;">
+                    {{ form_errors(registrationForm) }}
+                </div>
+            {% endif %}
 
             <div class="form-group">
-                {{ form_label(registrationForm.email) }}
-                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(registrationForm.email) }}
+                {{ form_label(registrationForm.email, 'Email Address', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-wrapper">
+                    {{ form_widget(registrationForm.email, {
+                        'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'you@example.com',
+                            'autofocus': true
+                        }
+                    }) }}
+                </div>
+                {% if registrationForm.email.vars.errors|length > 0 %}
+                    <div class="form-error">
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="form-group">
-                {{ form_label(registrationForm.plainPassword, 'Password') }}
-                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
-                {{ form_errors(registrationForm.plainPassword) }}
+                {{ form_label(registrationForm.plainPassword, 'Password', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-wrapper">
+                    {{ form_widget(registrationForm.plainPassword, {
+                        'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'At least 6 characters with letters and numbers'
+                        }
+                    }) }}
+                </div>
+                {% if registrationForm.plainPassword.vars.errors|length > 0 %}
+                    <div class="form-error">
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="checkbox-group">
-                {{ form_widget(registrationForm.agreeTerms) }}
-                <label for="{{ registrationForm.agreeTerms.vars.id }}">
+                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'checkbox-input'}}) }}
+                <label for="{{ registrationForm.agreeTerms.vars.id }}" class="checkbox-label">
                     I agree to the Terms and Conditions
                 </label>
-                {{ form_errors(registrationForm.agreeTerms) }}
             </div>
+            {% if registrationForm.agreeTerms.vars.errors|length > 0 %}
+                <div class="form-error" style="margin-top: -20px; margin-bottom: 20px;">
+                    {{ form_errors(registrationForm.agreeTerms) }}
+                </div>
+            {% endif %}
 
             <button type="submit" class="btn-primary">Create Account</button>
 
         {{ form_end(registrationForm) }}
 
-        <div class="create-account">
-            <p>
-                Already have an account? <a href="{{ path('app_login_index') }}">Sign in</a>
-            </p>
+        <div class="form-footer">
+            <p>Already have an account? <a href="{{ path('app_login_index') }}">Sign in now</a></p>
         </div>
     </div>
-</div>
+
+    <!-- SweetAlert Triggers -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="{{ asset('style/css/DASHBOARD/flash-messages.css') }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle flash messages
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    Swal.fire({
+                        title: '{{ label == "success" ? "Success!" : (label == "error" ? "Registration Failed" : label|capitalize) }}',
+                        text: '{{ message|e('js') }}',
+                        icon: '{{ label == "success" ? "success" : (label == "warning" ? "warning" : (label == "info" ? "info" : "error")) }}',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'florynn-swal-popup',
+                            title: 'florynn-swal-title',
+                            content: 'florynn-swal-content',
+                            confirmButton: 'florynn-swal-confirm'
+                        }
+                    }).then((result) => {
+                        {% if label == "success" %}
+                            if (result.isConfirmed) {
+                                window.location.href = "{{ path('app_login_index') }}";
+                            }
+                        {% endif %}
+                    });
+                {% endfor %}
+            {% endfor %}
+        });
+    </script>
+</body>
 {% endblock %}
+</html>

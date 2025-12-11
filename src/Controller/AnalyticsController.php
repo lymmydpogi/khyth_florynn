@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Repository\OrderRepository;
 use App\Repository\ServicesRepository;
 use App\Repository\UserRepository;
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,8 @@ final class AnalyticsController extends AbstractController
         Request $request,
         OrderRepository $orderRepository,
         ServicesRepository $servicesRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        ProductRepository $productRepository
     ): Response {
         // Check if generating a report
         $reportType = $request->query->get('reportType');
@@ -47,6 +49,7 @@ final class AnalyticsController extends AbstractController
             $orderRepository, 
             $servicesRepository, 
             $userRepository,
+            $productRepository,
             $reportType,
             $reportsData,
             $tableHeaders,
@@ -185,6 +188,7 @@ final class AnalyticsController extends AbstractController
         OrderRepository $orderRepository,
         ServicesRepository $servicesRepository,
         UserRepository $userRepository,
+        ProductRepository $productRepository,
         $reportType = '',
         array $reportsData = [],
         array $tableHeaders = [],
@@ -291,13 +295,39 @@ final class AnalyticsController extends AbstractController
         }
 
         // ────────── Payment Method Data ──────────
-        $paymentMethods = ['Cash', 'Gcash', 'Credit Card'];
-        $paymentMethodData = ['labels' => $paymentMethods, 'values' => []];
+        $paymentMethods = [Order::PAYMENT_CASH, Order::PAYMENT_GCASH, Order::PAYMENT_CREDIT_CARD];
+        $paymentMethodData = ['labels' => [], 'values' => []];
 
         foreach ($paymentMethods as $method) {
             $count = $orderRepository->count(['paymentMethod' => $method]);
-            $paymentMethodData['values'][] = $count;
+            if ($count > 0) {
+                $paymentMethodData['labels'][] = $method;
+                $paymentMethodData['values'][] = $count;
+            }
         }
+
+        // ────────── Product Category Data ──────────
+        $categories = ['Bouquet', 'Arrangement', 'Single Flower', 'Wedding', 'Funeral', 'Event', 'Gift Set', 'Other'];
+        $productCategoryData = ['labels' => [], 'values' => []];
+        
+        foreach ($categories as $category) {
+            $count = $productRepository->count(['category' => $category, 'status' => 'active']);
+            if ($count > 0) {
+                $productCategoryData['labels'][] = $category;
+                $productCategoryData['values'][] = $count;
+            }
+        }
+
+        // ────────── Completion Rate Data ──────────
+        $completedOrders = (int) $orderRepository->count(['status' => Order::STATUS_COMPLETED]);
+        $pendingOrdersCount = (int) $orderRepository->count(['status' => Order::STATUS_PENDING]);
+        $canceledOrders = (int) $orderRepository->count(['status' => Order::STATUS_CANCELED]);
+        
+        $completionRateData = [
+            'completed' => $completedOrders,
+            'pending' => $pendingOrdersCount,
+            'canceled' => $canceledOrders
+        ];
 
         // ────────── Recent Activities (limit 5 total) ──────────
         $recentOrders = $orderRepository->createQueryBuilder('o')
@@ -351,6 +381,8 @@ final class AnalyticsController extends AbstractController
             'topServicesData' => $topServicesData,
             'clientGrowthData' => $clientGrowthData,
             'paymentMethodData' => $paymentMethodData,
+            'productCategoryData' => $productCategoryData,
+            'completionRateData' => $completionRateData,
             'activities' => $activities,
             // Report data
             'report_type' => $reportType,

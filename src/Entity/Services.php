@@ -69,6 +69,7 @@ class Services
     #[Assert\NotBlank(message: "Pricing unit is required.")]
     #[Assert\Choice(
         choices: [
+            'arrangement', 'bouquet', 'event', 'customization',
             'project', 'package', 'deliverable', 'hour', 'day', 'week',
             'milestone', 'phase', 'stage'
         ],

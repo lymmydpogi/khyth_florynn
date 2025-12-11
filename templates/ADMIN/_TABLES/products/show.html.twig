@@ -1,0 +1,96 @@
+{% extends 'ADMIN/base.html.twig' %}
+
+{% block title %}Product Details{% endblock %}
+{% block page_title %}Product Details{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('style/css/PRODUCT/product-show.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+    <div class="content-container">
+
+        <!-- Header -->
+        <div class="header-section">
+            <h1>{{ product.name }}</h1>
+            <p>Complete details of this product</p>
+        </div>
+
+        <!-- Product Card -->
+        <div class="product-card">
+            {% if product.image %}
+            <div class="product-image-section">
+                <img src="{{ asset('uploads/products/' ~ product.image) }}" 
+                     alt="{{ product.name }}" 
+                     class="product-main-image">
+            </div>
+            {% endif %}
+
+            <div class="product-details-section">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Product Name</th>
+                            <td>{{ product.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ product.description }}</td>
+                        </tr>
+                        <tr>
+                            <th>Category</th>
+                            <td>
+                                <span class="category-badge">{{ product.category }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            <td class="price-value">₱{{ product.price|number_format(2, '.', ',') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Stock Quantity</th>
+                            <td>
+                                <span class="stock-badge {{ product.stock <= 5 ? 'low-stock' : (product.stock <= 10 ? 'medium-stock' : 'high-stock') }}">
+                                    {{ product.stock }} {{ product.stock == 1 ? 'item' : 'items' }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                                <span class="status-badge {{ product.status|lower|replace({'_': '-'}) }}">
+                                    {{ product.status|replace({'_': ' '})|title }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Created By</th>
+                            <td>{{ product.createdBy.name ?? product.createdBy.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created At</th>
+                            <td>{{ product.createdAt|date('F d, Y h:i A') }}</td>
+                        </tr>
+                        {% if product.updatedAt %}
+                        <tr>
+                            <th>Last Updated</th>
+                            <td>{{ product.updatedAt|date('F d, Y h:i A') }}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="{{ path('app_products_index') }}" class="btn btn-back">Back to Products</a>
+            <a href="{{ path('app_products_edit', {'id': product.id}) }}" class="btn btn-edit">Edit Product</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

@@ -5,14 +5,14 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('style/css/DASHBOARD/activity_logs.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
 {% endblock %}
 
 {% block body %}
 <div class="container mt-4">
 
     <!-- Hero Section -->
-    <div class="hero-section mb-4">
+    <div class="page-header">
         <h1>Activity Logs</h1>
         <p>View all user actions including logins, logouts, and CRUD operations.</p>
     </div>
@@ -40,8 +40,12 @@
                         <tr>
                             <td>{{ log.userId }}</td>
                             <td>{{ log.userEmail }}</td>
-                            <td>{{ log.role }}</td>
-                            <td>{{ log.action }}</td>
+                            <td>
+                                <span class="badge badge-role">{{ log.role|replace({'ROLE_': ''}) }}</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-action">{{ log.action|replace({'_': ' '})|title }}</span>
+                            </td>
                             <td>{{ log.actionDetails ?: '-' }}</td>
                             <td nowrap>{{ log.createdAt|date('Y-m-d H:i:s') }}</td>
                         </tr>
@@ -59,36 +63,33 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script>
-       $(document).ready(function() {
-    $('#activityLogs').DataTable({
-        pagingType: "simple_numbers", // or "numbers" for only numbers
-        paging: true,
-        searching: true,
-        info: true,
-        ordering: true,
-        pageLength: 10,
-        lengthChange: false,
-        responsive: true,
-        language: {
-            search: "_INPUT_",
-            searchPlaceholder: "Search logs...",
-            paginate: {
-                previous: "Previous", // nicer arrow
-                next: "Next"
-            },
-            info: "Showing _START_ to _END_ of _TOTAL_ logs",
-            infoEmpty: "No logs available",
-            zeroRecords: "No matching logs found"
-        },
-        columnDefs: [
-            { orderable: true, targets: '_all' }
-        ]
-    });
-
-    // Add spacing for pagination
-    $('.dataTables_paginate').addClass('mt-3 mb-3 d-flex justify-content-center');
-});
-
-           
+        $(document).ready(function() {
+            $('#activityLogs').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                pageLength: 10,
+                lengthMenu: [5, 10, 20, 50],
+                order: [[5, 'desc']], // Sort by date descending
+                pagingType: "simple_numbers",
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search logs...",
+                    paginate: {
+                        previous: "‹",
+                        next: "›"
+                    },
+                    info: "Showing _START_ to _END_ of _TOTAL_ logs",
+                    infoEmpty: "No logs available",
+                    zeroRecords: "No matching logs found",
+                    lengthMenu: "Show _MENU_ entries"
+                },
+                columnDefs: [
+                    { orderable: true, targets: '_all' }
+                ],
+                responsive: true
+            });
+        });
     </script>
 {% endblock %}

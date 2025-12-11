@@ -1,6 +1,7 @@
 {% extends 'ADMIN/base.html.twig' %}
 
-{% block title %}{{ order.id ? 'Edit Order' : 'Create New Order' }}{% endblock %}
+{% block title %}New Order{% endblock %}
+{% block page_title %}Create New Order{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -13,8 +14,8 @@
 
         <!-- Header Section -->
         <div class="header-section">
-            <h1>{{ order.id ? 'Edit Order' : 'Create New Order' }}</h1>
-            <p>{{ order.id ? 'Update the order details below' : 'Add a new order to your system' }}</p>
+            <h1>Create New Order</h1>
+            <p>Add a new order to your system</p>
         </div>
 
         <!-- Form Card -->
@@ -78,10 +79,8 @@
 
             <!-- Form Actions -->
             <div class="form-actions">
-                <a href="{{ path('app_order_index') }}" class="btn-back">← Cancel</a>
-                <button type="submit" class="btn-submit">
-                    {{ order.id ? 'Update Order' : 'Create Order' }}
-                </button>
+                <a href="{{ path('app_order_index') }}" class="btn-back">Cancel</a>
+                <button type="submit" class="btn-submit">Create Order</button>
             </div>
 
             {{ form_end(form) }}

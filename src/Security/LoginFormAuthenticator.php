@@ -69,8 +69,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         if (in_array('ROLE_STAFF', $roles, true)) {
-            // Staff goes to /services (or a staff dashboard route)
-            return new RedirectResponse($this->urlGenerator->generate('app_services_index'));
+            // Staff goes to their dedicated dashboard
+            return new RedirectResponse($this->urlGenerator->generate('app_staff_dashboard_index'));
         }
 
         if (in_array('ROLE_CLIENT', $roles, true)) {

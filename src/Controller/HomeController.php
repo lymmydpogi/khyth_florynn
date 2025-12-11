@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Services;
 use App\Entity\Order;
+use App\Entity\Product;
 use App\Form\ServicesType;
 use App\Repository\ServicesRepository;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +24,8 @@ class HomeController extends AbstractController
         EntityManagerInterface $em,
         ServicesRepository $servicesRepository,
         OrderRepository $orderRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        ProductRepository $productRepository
     ): Response {
         // ────────── Service Creation Form ──────────
         $service = new Services();
@@ -38,13 +41,42 @@ class HomeController extends AbstractController
 
         // ────────── Analytics ──────────
         $activeServices = $servicesRepository->count([]);
-        $totalUsers = $userRepository->countAllClients(); // updated to count ROLE_CLIENT users
+        $totalUsers = $userRepository->countAllClients();
+        
+        // Product statistics
+        $totalProducts = $productRepository->count([]);
+        $activeProducts = (int) $productRepository->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->where('p.status = :status')
+            ->setParameter('status', 'active')
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+        $lowStockProducts = count($productRepository->findLowStock());
+        $outOfStockProducts = (int) $productRepository->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->where('p.status = :status')
+            ->setParameter('status', 'out_of_stock')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-        // Use QueryBuilder for accurate pending orders count
+        // Order statistics
         $pendingOrders = (int) $orderRepository->createQueryBuilder('o')
             ->select('COUNT(o.id)')
             ->where('o.status = :status')
             ->setParameter('status', Order::STATUS_PENDING)
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+        $completedOrders = (int) $orderRepository->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->where('o.status = :status')
+            ->setParameter('status', Order::STATUS_COMPLETED)
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+        $totalOrders = (int) $orderRepository->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
             ->getQuery()
             ->getSingleScalarResult();
 
@@ -82,8 +114,14 @@ class HomeController extends AbstractController
             'form' => $form->createView(),
             'services' => $servicesRepository->findAll(),
             'activeServices' => $activeServices,
+            'totalProducts' => $totalProducts,
+            'activeProducts' => $activeProducts,
+            'lowStockProducts' => $lowStockProducts,
+            'outOfStockProducts' => $outOfStockProducts,
             'pendingOrders' => $pendingOrders,
-            'totalUsers' => $totalUsers, // renamed for clarity
+            'completedOrders' => $completedOrders,
+            'totalOrders' => $totalOrders,
+            'totalUsers' => $totalUsers,
             'monthlyRevenue' => $monthlyRevenue,
             'pendingOrdersTrend' => $pendingOrdersTrend,
         ]);

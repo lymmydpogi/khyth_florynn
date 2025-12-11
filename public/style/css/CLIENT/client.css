@@ -9,11 +9,11 @@ body {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #6B0F1A 0%, #8B1A2A 100%);
     padding: 48px 32px;
-    border-radius: 16px;
+    border-radius: 0;
     margin-bottom: 32px;
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 10px 30px rgba(107, 15, 26, 0.2);
     text-align: center;
 }
 
@@ -38,7 +38,7 @@ body {
     align-items: center;
     gap: 8px;
     padding: 12px 28px;
-    background: #6366f1;
+    background: #6B0F1A;
     color: #ffffff;
     text-decoration: none;
     border-radius: 10px;
@@ -49,7 +49,7 @@ body {
 }
 
 .btn-create:hover {
-    background: #4f46e5;
+    background: #8B1A2A;
     transform: translateY(-2px);
 }
 
@@ -97,7 +97,7 @@ body {
 /* Table Container */
 .table-container {
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 0;
     border: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     overflow: hidden;
@@ -163,9 +163,9 @@ body {
 }
 
 .table tbody td a:hover {
-    background: #6366f1;
+    background: #6B0F1A;
     color: #fff;
-    border-color: #6366f1;
+    border-color: #6B0F1A;
 }
 
 /* Empty State */

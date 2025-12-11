@@ -1,0 +1,204 @@
+{% extends 'ADMIN/base.html.twig' %}
+
+{% block title %}Staff Dashboard{% endblock %}
+{% block page_title %}My Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('style/css/DASHBOARD/staff-dashboard.css') }}">
+{% endblock %}
+
+{% block body %}
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="welcome-content">
+            <h1>Welcome, {{ app.user.name ?? app.user.email|split('@')[0]|title }}</h1>
+            <p>Manage your flower products, services, and customer orders</p>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-section">
+        <h2 class="section-title">My Performance</h2>
+        <div class="stats-grid">
+            <div class="stat-card stat-primary">
+                <div class="stat-content">
+                    <div class="stat-value">{{ myActiveProducts|length }}</div>
+                    <div class="stat-label">Active Products</div>
+                    <div class="stat-sublabel">{{ myProducts|length }} total in catalog</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-warning">
+                <div class="stat-content">
+                    <div class="stat-value">{{ myLowStockProducts|length }}</div>
+                    <div class="stat-label">Low Stock Items</div>
+                    <div class="stat-sublabel">Needs restocking</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-info">
+                <div class="stat-content">
+                    <div class="stat-value">{{ myPendingOrders|length }}</div>
+                    <div class="stat-label">Pending Orders</div>
+                    <div class="stat-sublabel">{{ myOrders|length }} total orders</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-success">
+                <div class="stat-content">
+                    <div class="stat-value">{{ myCompletedOrders|length }}</div>
+                    <div class="stat-label">Completed Orders</div>
+                    <div class="stat-sublabel">This month</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-revenue">
+                <div class="stat-content">
+                    <div class="stat-value">₱{{ myMonthlyRevenue|number_format(2, '.', ',') }}</div>
+                    <div class="stat-label">Monthly Revenue</div>
+                    <div class="stat-sublabel">From my orders</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-inventory">
+                <div class="stat-content">
+                    <div class="stat-value">₱{{ totalInventoryValue|number_format(2, '.', ',') }}</div>
+                    <div class="stat-label">Inventory Value</div>
+                    <div class="stat-sublabel">My products</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="actions-grid">
+            <a href="{{ path('app_products_new') }}" class="action-card">
+                <div class="action-title">Add New Product</div>
+                <div class="action-desc">Add a new flower product to your catalog</div>
+            </a>
+            <a href="{{ path('app_services_new') }}" class="action-card">
+                <div class="action-title">Add New Service</div>
+                <div class="action-desc">Create a new flower arrangement service</div>
+            </a>
+            <a href="{{ path('app_order_new') }}" class="action-card">
+                <div class="action-title">Create Order</div>
+                <div class="action-desc">Process a new customer order</div>
+            </a>
+            <a href="{{ path('app_products_index') }}" class="action-card">
+                <div class="action-title">Manage Products</div>
+                <div class="action-desc">View and edit your flower products</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="recent-section">
+        <div class="section-header">
+            <h2 class="section-title">Recent Orders</h2>
+            <a href="{{ path('app_order_index') }}" class="view-all-link">View All</a>
+        </div>
+        {% if recentOrders|length > 0 %}
+            <div class="orders-list">
+                {% for order in recentOrders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-id">Order #{{ order.id }}</div>
+                            <span class="order-status status-{{ order.status|lower }}">{{ order.status }}</span>
+                        </div>
+                        <div class="order-details">
+                            <div class="order-info">
+                                <div class="order-client">{{ order.clientName }}</div>
+                                <div class="order-date">{{ order.orderDate|date('M d, Y h:i A') }}</div>
+                            </div>
+                            <div class="order-amount">₱{{ order.totalPrice|number_format(2, '.', ',') }}</div>
+                        </div>
+                        {% if order.service %}
+                            <div class="order-service">Service: {{ order.service.name }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No orders yet. Start by creating your first order!</p>
+                <a href="{{ path('app_order_new') }}" class="btn-primary">Create Order</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Low Stock Alert -->
+    {% if myLowStockProducts|length > 0 %}
+    <div class="alert-section">
+        <div class="alert-card alert-warning">
+            <div class="alert-header">
+                <div class="alert-title">Low Stock Alert</div>
+            </div>
+            <div class="alert-content">
+                <p>You have <strong>{{ myLowStockProducts|length }}</strong> product(s) with low stock that need attention:</p>
+                <ul class="low-stock-list">
+                    {% for product in myLowStockProducts %}
+                        <li>
+                            <a href="{{ path('app_products_edit', {'id': product.id}) }}">
+                                {{ product.name }} - Only {{ product.stock }} left
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- My Products Summary -->
+    <div class="summary-section">
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h3 class="summary-title">My Products</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <span class="summary-value">{{ myProducts|length }}</span>
+                        <span class="summary-label">Total</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="summary-value">{{ myActiveProducts|length }}</span>
+                        <span class="summary-label">Active</span>
+                    </div>
+                </div>
+                <a href="{{ path('app_products_index') }}" class="summary-link">Manage Products</a>
+            </div>
+
+            <div class="summary-card">
+                <h3 class="summary-title">My Services</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <span class="summary-value">{{ myServices|length }}</span>
+                        <span class="summary-label">Total</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="summary-value">{{ myActiveServices|length }}</span>
+                        <span class="summary-label">Active</span>
+                    </div>
+                </div>
+                <a href="{{ path('app_services_index') }}" class="summary-link">Manage Services</a>
+            </div>
+
+            <div class="summary-card">
+                <h3 class="summary-title">My Orders</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <span class="summary-value">{{ myOrders|length }}</span>
+                        <span class="summary-label">Total</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="summary-value">{{ myPendingOrders|length }}</span>
+                        <span class="summary-label">Pending</span>
+                    </div>
+                </div>
+                <a href="{{ path('app_order_index') }}" class="summary-link">View Orders</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

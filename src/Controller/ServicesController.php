@@ -43,12 +43,29 @@ final class ServicesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($service);
-            $entityManager->flush();
+            try {
+                // Validate price
+                if ($service->getPrice() < 0) {
+                    $this->addFlash('error', 'Service price cannot be negative.');
+                    return $this->render('ADMIN/_TABLES/services/new.html.twig', [
+                        'service' => $service,
+                        'form' => $form,
+                    ]);
+                }
 
-            $this->addFlash('success', 'Service created successfully.');
+                $entityManager->persist($service);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_services_index', [], Response::HTTP_SEE_OTHER);
+                $this->addFlash('success', 'Service created successfully.');
+                return $this->redirectToRoute('app_services_index', [], Response::HTTP_SEE_OTHER);
+            } catch (\Doctrine\DBAL\Exception\ConnectionException $e) {
+                $this->addFlash('error', 'Database connection error. Please try again later.');
+            } catch (\Exception $e) {
+                error_log('Service creation error: ' . $e->getMessage());
+                $this->addFlash('error', 'An unexpected error occurred while creating the service. Please try again.');
+            }
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('error', 'Please correct the errors in the form and try again.');
         }
 
         return $this->render('ADMIN/_TABLES/services/new.html.twig', [

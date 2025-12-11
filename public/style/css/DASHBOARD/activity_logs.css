@@ -11,11 +11,11 @@ body {
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #6B0F1A 0%, #8B1A2A 100%);
     padding: 48px 32px;
-    border-radius: 16px;
+    border-radius: 0;
     margin-bottom: 32px;
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 10px 30px rgba(107, 15, 26, 0.2);
     text-align: center;
 }
 
@@ -48,7 +48,7 @@ body {
     align-items: center;
     gap: 8px;
     padding: 12px 28px;
-    background: #6366f1;
+    background: #6B0F1A;
     color: #ffffff;
     text-decoration: none;
     border-radius: 10px;
@@ -59,7 +59,7 @@ body {
 }
 
 .btn-create:hover {
-    background: #4f46e5;
+    background: #8B1A2A;
     transform: translateY(-2px);
 }
 
@@ -98,150 +98,13 @@ body {
 /* Table Container */
 .table-container {
     background: #ffffff;
-    border-radius: 12px;
+    border-radius: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border: 1px solid #e5e7eb;
     overflow: hidden;
 }
 
-/* DataTables Wrapper */
-.dataTables_wrapper {
-    padding: 20px;
-}
-
-.dataTables_wrapper .dataTables_length,
-.dataTables_wrapper .dataTables_filter {
-    margin-bottom: 20px;
-}
-
-.dataTables_wrapper .dataTables_filter input {
-    padding: 8px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    width: 250px;
-}
-
-.dataTables_wrapper .dataTables_length select {
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-}
-
-.dataTables_wrapper .dataTables_filter input:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-}
-
-/* Pagination Fix & Styling */
-.dataTables_wrapper .dataTables_paginate {
-    margin-top: 20px;
-}
-
-.dataTables_wrapper .dataTables_paginate .pagination {
-    display: flex !important;
-    justify-content: center;
-    flex-wrap: nowrap;
-    gap: 0.25rem;
-    padding-left: 0;
-    list-style: none;
-}
-
-.dataTables_wrapper .dataTables_paginate .pagination li {
-    display: list-item !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    padding: 0.35rem 0.75rem !important;
-    margin: 0;
-    border-radius: 6px;
-    border: 1px solid #d1d5db;
-    color: #374151 !important;
-    background-color: #ffffff !important;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background-color: #6366f1 !important;
-    color: #fff !important;
-    border: none !important;
-}
-
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background-color: #4f46e5 !important;
-    color: #fff !important;
-}
-
-/* Table Styling */
-.table {
-    width: 100% !important;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.table thead {
-    background: linear-gradient(180deg, #f9fafb 0%, #f3f4f6 100%);
-}
-
-.table thead th {
-    color: #374151;
-    padding: 16px 20px;
-    text-align: left;
-    font-weight: 600;
-    font-size: 12px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #e5e7eb;
-    white-space: nowrap;
-}
-
-.table tbody tr {
-    border-bottom: 1px solid #f3f4f6;
-    transition: all 0.2s ease;
-}
-
-.table tbody tr:hover {
-    background: #f9fafb;
-}
-
-.table tbody td {
-    padding: 16px 20px;
-    color: #6b7280;
-    font-size: 14px;
-}
-
-.table tbody td:first-child {
-    font-weight: 700;
-    color: #111827;
-}
-
-/* Action Links */
-.table tbody td a {
-    display: inline-block;
-    padding: 7px 16px;
-    margin-right: 6px;
-    background: #f9fafb;
-    color: #374151;
-    text-decoration: none;
-    border-radius: 6px;
-    border: 1px solid #e5e7eb;
-    font-size: 13px;
-    transition: 0.2s;
-}
-
-.table tbody td a:hover {
-    background: #6366f1;
-    color: white;
-    border-color: #6366f1;
-}
-
-/* Empty State */
-.empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: #9ca3af;
-    font-size: 15px;
-}
+/* DataTables styling is now in datatables.css */
 
 /* Responsive Table */
 @media (max-width: 768px) {
@@ -266,7 +129,7 @@ body {
 .reports-section {
     background: #ffffff;
     padding: 32px;
-    border-radius: 16px;
+    border-radius: 0;
     border: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     margin-bottom: 40px;
@@ -312,8 +175,8 @@ body {
 .form-group select:focus,
 .form-group input[type="date"]:focus {
     outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    border-color: #6B0F1A;
+    box-shadow: 0 0 0 3px rgba(107, 15, 26, 0.1);
 }
 
 .btn {
@@ -330,13 +193,13 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #6B0F1A 0%, #8B1A2A 100%);
     color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(107, 15, 26, 0.3);
 }
 
 .btn-export {
@@ -420,7 +283,7 @@ body {
 .activity-logs-section {
     background: #ffffff;
     padding: 32px;
-    border-radius: 16px;
+    border-radius: 0;
     border: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     margin-bottom: 40px;

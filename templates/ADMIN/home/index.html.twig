@@ -9,74 +9,90 @@
 {% endblock %}
 
 {% block body %}
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="logo-container">
-            <img src="{{ asset('images/avatars/cd_logo.png') }}" alt="Campana Designs Logo">
-        </div>
-        <h1>Welcome Admin</h1>
-        <p>Manage your services, track orders, and grow your business with powerful tools at your fingertips.</p>
-        <div class="hero-cta">
-            <a href="{{ path('app_services_new') }}" class="btn-primary">Get Started</a>
-            <a href="{{ path('app_services_index') }}" class="btn-secondary">View Services</a>
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Manage your flower inventory, track orders, and monitor your business performance</p>
+        <div class="header-actions">
+            <a href="{{ path('app_products_new') }}" class="btn-primary">Add New Product</a>
+            <a href="{{ path('app_order_new') }}" class="btn-secondary">Create Order</a>
         </div>
     </div>
 
     <!-- Stats Section -->
     <div class="stats-section">
-        <h2 class="section-title">Your Performance</h2>
+        <h2 class="section-title">Business Overview</h2>
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-trend up">↑ 12%</span>
-                </div>
-                <div class="stat-value">{{ activeServices }}</div>
-                <div class="stat-label">Active Services</div>
+                <div class="stat-value">{{ activeProducts }}</div>
+                <div class="stat-label">Active Products</div>
+                <div class="stat-sublabel">{{ totalProducts }} total in catalog</div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-trend up">↑ 8%</span>
-                </div>
                 <div class="stat-value">{{ pendingOrders }}</div>
                 <div class="stat-label">Pending Orders</div>
+                <div class="stat-sublabel">{{ totalOrders }} total orders</div>
             </div>
 
             <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-trend up">↑ 23%</span>
-                </div>
+                <div class="stat-value">{{ completedOrders }}</div>
+                <div class="stat-label">Completed Orders</div>
+                <div class="stat-sublabel">Successfully delivered</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-value">₱{{ monthlyRevenue|number_format(2, '.', ',') }}</div>
+                <div class="stat-label">Monthly Revenue</div>
+                <div class="stat-sublabel">This month's earnings</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-value">{{ lowStockProducts }}</div>
+                <div class="stat-label">Low Stock Items</div>
+                <div class="stat-sublabel">Needs restocking</div>
+            </div>
+
+            <div class="stat-card">
                 <div class="stat-value">{{ totalUsers }}</div>
                 <div class="stat-label">Total Clients</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-trend up">↑ 15%</span>
-                </div>
-                <div class="stat-value">₱{{ monthlyRevenue|number_format(2, '.', ',') }}</div>
-                <div class="stat-label">Revenue (MTD)</div>
+                <div class="stat-sublabel">Registered customers</div>
             </div>
         </div>
     </div>
 
     <!-- Features Section -->
     <div class="features-section">
-        <h2 class="section-title">What You Can Do</h2>
+        <h2 class="section-title">Business Management</h2>
         <div class="features-grid">
             <div class="feature-card">
-                <h3>Launch Services</h3>
-                <p>Create and manage your services with ease. Get started in minutes.</p>
+                <h3>Inventory Management</h3>
+                <p>Track your flower inventory, manage stock levels, and get alerts when items are running low.</p>
             </div>
             
             <div class="feature-card">
-                <h3>Track Growth</h3>
-                <p>Monitor your business metrics and make data-driven decisions.</p>
+                <h3>Order Processing</h3>
+                <p>Create and manage customer orders, track delivery status, and process payments efficiently.</p>
             </div>
             
             <div class="feature-card">
-                <h3>Manage Clients</h3>
-                <p>Keep track of all your clients and their orders in one place.</p>
+                <h3>Customer Management</h3>
+                <p>Keep track of all your clients, their order history, and maintain strong customer relationships.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Service Offerings</h3>
+                <p>Manage your flower arrangement services, pricing, and delivery options in one place.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Sales Analytics</h3>
+                <p>Monitor your revenue, track sales trends, and make data-driven decisions for your business.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Stock Alerts</h3>
+                <p>Get notified when products are running low or out of stock to ensure you never miss a sale.</p>
             </div>
         </div>
     </div>
@@ -85,10 +101,42 @@
     <div class="quick-actions">
         <h2 class="section-title">Quick Actions</h2>
         <div class="actions-grid">
+            <a href="{{ path('app_products_new') }}" class="action-button">Add New Product</a>
             <a href="{{ path('app_services_new') }}" class="action-button">Add Service</a>
-            <a href="{{ path('app_order_index') }}" class="action-button">View Orders</a>
-            <a href="{{ path('app_user_new') }}" class="action-button">Add User</a>
-            <a href="{{ path('app_analytics_index') }}" class="action-button">View Reports</a>
+            <a href="{{ path('app_order_new') }}" class="action-button">Create Order</a>
+            <a href="{{ path('app_user_new') }}" class="action-button">Add Client</a>
+            <a href="{{ path('app_products_index') }}" class="action-button">Manage Products</a>
+            <a href="{{ path('app_analytics_index') }}" class="action-button">View Analytics</a>
         </div>
     </div>
+
+    <!-- Alerts Section -->
+    {% if lowStockProducts > 0 or outOfStockProducts > 0 %}
+    <div class="alerts-section">
+        <h2 class="section-title">Stock Alerts</h2>
+        <div class="alerts-grid">
+            {% if lowStockProducts > 0 %}
+            <div class="alert-card alert-warning">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-content">
+                    <h3>Low Stock Alert</h3>
+                    <p>You have <strong>{{ lowStockProducts }}</strong> product(s) with low stock that need attention.</p>
+                    <a href="{{ path('app_products_index') }}" class="alert-link">View Products</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if outOfStockProducts > 0 %}
+            <div class="alert-card alert-danger">
+                <div class="alert-icon">🚫</div>
+                <div class="alert-content">
+                    <h3>Out of Stock</h3>
+                    <p>You have <strong>{{ outOfStockProducts }}</strong> product(s) that are currently out of stock.</p>
+                    <a href="{{ path('app_products_index') }}" class="alert-link">Restock Now</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}

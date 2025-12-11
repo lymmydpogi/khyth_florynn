@@ -12,43 +12,84 @@
 <div class="page-wrapper">
     <div class="content-container">
 
-        <!-- Header -->
+        <!-- Header Section -->
         <div class="header-section">
             <h1>Edit User</h1>
-            <p>Update user information below</p>
+            <p>Update user information</p>
         </div>
 
         <!-- Form Card -->
         <div class="form-card">
-            {{ form_start(form) }}
-
+            {{ form_start(form, {'attr': {'class': 'user-form'}}) }}
             <div class="form-grid">
-                <div class="form-group">{{ form_row(form.name) }}</div>
-                <div class="form-group">{{ form_row(form.email) }}</div>
-                <div class="form-group">{{ form_row(form.phone) }}</div>
-                <div class="form-group">{{ form_row(form.address) }}</div>
-                
-                {# Password field for new users #}
-                {% if form.password is defined %}
-                    <div class="form-group">{{ form_row(form.password) }}</div>
+                <!-- Name -->
+                <div class="form-group">
+                    <label>Name</label>
+                    {{ form_widget(form.name) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label>Email</label>
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    <label>Phone</label>
+                    {{ form_widget(form.phone) }}
+                    {{ form_errors(form.phone) }}
+                </div>
+
+                <!-- Roles -->
+                <div class="form-group">
+                    <label>Roles</label>
+                    {{ form_widget(form.roles) }}
+                    {{ form_errors(form.roles) }}
+                </div>
+
+                <!-- Address -->
+                <div class="form-group">
+                    <label>Address</label>
+                    {{ form_widget(form.address) }}
+                    {{ form_errors(form.address) }}
+                </div>
+
+                <!-- Status -->
+                {% if form.status is defined %}
+                <div class="form-group">
+                    <label>Status</label>
+                    {{ form_widget(form.status) }}
+                    {{ form_errors(form.status) }}
+                </div>
                 {% endif %}
 
-                {# New password field for editing users (note the underscore!) #}
+                <!-- Password field for new users -->
+                {% if form.password is defined %}
+                <div class="form-group">
+                    <label>Password</label>
+                    {{ form_widget(form.password) }}
+                    {{ form_errors(form.password) }}
+                </div>
+                {% endif %}
+
+                <!-- New password field for editing users -->
                 {% if form.new_password is defined %}
-                    <div class="form-group">{{ form_row(form.new_password) }}</div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    {{ form_widget(form.new_password) }}
+                    {{ form_errors(form.new_password) }}
+                    <small class="form-help">Leave empty to keep current password</small>
+                </div>
                 {% endif %}
-                
-                {# Render status only if it exists (edit mode) #}
-                {% if form.status is defined %}
-                    <div class="form-group">{{ form_row(form.status) }}</div>
-                {% endif %}
-                
-                <div class="form-group">{{ form_row(form.roles) }}</div>
             </div>
 
+            <!-- Form Actions -->
             <div class="form-actions">
-                <button type="submit" class="btn btn-update">Update User</button>
-                <a href="{{ path('app_user_index') }}" class="btn btn-back">Back to Users</a>
+                <a href="{{ path('app_user_index') }}" class="btn-back">Cancel</a>
+                <button type="submit" class="btn-submit">Update User</button>
             </div>
 
             {{ form_end(form) }}

@@ -1,6 +1,7 @@
 {% extends 'ADMIN/base.html.twig' %}
 
 {% block title %}New Service{% endblock %}
+{% block page_title %}Add New Service{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -89,7 +90,7 @@
 
             <!-- Form Actions -->
             <div class="form-actions">
-                <a href="{{ path('app_services_index') }}" class="btn-back">← Cancel</a>
+                <a href="{{ path('app_services_index') }}" class="btn-back">Cancel</a>
                 <button type="submit" class="btn-submit">Create Service</button>
             </div>
 

@@ -1,6 +1,6 @@
 /* --- HERO SECTION --- */
 .hero-section {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #6B0F1A 0%, #8B1A2A 100%);
     padding: 48px 32px;
     border-radius: 16px;
     margin-bottom: 32px;
@@ -118,7 +118,7 @@ button[type="submit"] {
 }
 
 button:hover {
-    background: #4f46e5;
+    background: #8B1A2A;
     transform: translateY(-1px);
 }
 
