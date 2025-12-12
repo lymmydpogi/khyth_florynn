@@ -75,7 +75,9 @@
         <!-- Action Buttons -->
         <div class="action-buttons">
             <a href="{{ path('app_user_index') }}" class="btn btn-back">Back to Users</a>
-            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-edit">Edit User</a>
+            {% if is_granted('USER_EDIT', user) %}
+                <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-edit">Edit User</a>
+            {% endif %}
         </div>
 
     </div>

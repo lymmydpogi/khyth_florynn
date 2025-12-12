@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Repository\OrderRepository;
+use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,6 +94,9 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('User not found.');
         }
 
+        // Check if current user has permission to edit this user
+        $this->denyAccessUnlessGranted(UserVoter::EDIT, $user);
+
         $form = $this->createForm(UserType::class, $user, [
             'is_edit' => true,
             'is_profile' => false,
@@ -126,6 +130,9 @@ class UserController extends AbstractController
             $this->addFlash('error', 'User not found.');
             return $this->redirectToRoute('app_user_index');
         }
+
+        // Check if current user has permission to delete this user
+        $this->denyAccessUnlessGranted(UserVoter::DELETE, $user);
 
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
