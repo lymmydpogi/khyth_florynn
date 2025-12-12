@@ -31,11 +31,19 @@ class ServiceVoter extends Voter
             return true;
         }
 
-        // Staff can only modify services they created
-        return match ($attribute) {
-            self::EDIT => $service->getCreatedBy() === $user,
-            self::DELETE => $service->getCreatedBy() === $user,
-            default => false
-        };
+        // Staff can modify services created by other staff, but not admin-created services
+        if ($user->isStaff()) {
+            $createdBy = $service->getCreatedBy();
+            
+            // Never allow staff to modify admin-created services
+            if ($createdBy && $createdBy->isAdmin()) {
+                return false;
+            }
+            
+            // Staff can modify services created by themselves or other staff
+            return true;
+        }
+
+        return false;
     }
 }

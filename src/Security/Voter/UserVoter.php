@@ -37,7 +37,7 @@ class UserVoter extends Voter
                 return false;
             }
             
-            // Staff can edit/delete other staff users
+            // Staff can edit/delete other staff users (including themselves)
             if ($targetUser->isStaff()) {
                 return true;
             }

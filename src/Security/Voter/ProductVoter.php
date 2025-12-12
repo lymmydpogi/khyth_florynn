@@ -31,12 +31,20 @@ class ProductVoter extends Voter
             return true;
         }
 
-        // Staff can only modify products they created
-        return match ($attribute) {
-            self::EDIT => $product->getCreatedBy() === $user,
-            self::DELETE => $product->getCreatedBy() === $user,
-            default => false
-        };
+        // Staff can modify products created by other staff, but not admin-created products
+        if ($user->isStaff()) {
+            $createdBy = $product->getCreatedBy();
+            
+            // Never allow staff to modify admin-created products
+            if ($createdBy && $createdBy->isAdmin()) {
+                return false;
+            }
+            
+            // Staff can modify products created by themselves or other staff
+            return true;
+        }
+
+        return false;
     }
 }
 

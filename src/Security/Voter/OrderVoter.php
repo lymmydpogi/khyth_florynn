@@ -31,11 +31,19 @@ class OrderVoter extends Voter
             return true;
         }
 
-        // Staff only allowed if they created the order
-        return match ($attribute) {
-            self::EDIT => $order->getCreatedBy() === $user,
-            self::DELETE => $order->getCreatedBy() === $user,
-            default => false
-        };
+        // Staff can modify orders created by other staff, but not admin-created orders
+        if ($user->isStaff()) {
+            $createdBy = $order->getCreatedBy();
+            
+            // Never allow staff to modify admin-created orders
+            if ($createdBy && $createdBy->isAdmin()) {
+                return false;
+            }
+            
+            // Staff can modify orders created by themselves or other staff
+            return true;
+        }
+
+        return false;
     }
 }
