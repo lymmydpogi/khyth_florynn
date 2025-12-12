@@ -57,7 +57,6 @@
                 <tr>
                     <th>ID</th>
                     <th>Client Name</th>
-                    <th>Client Email</th>
                     <th>Service</th>
                     <th>Status</th>
                     <th>Delivery Date</th>
@@ -69,7 +68,6 @@
                     <tr>
                         <td>{{ order.id }}</td>
                         <td>{{ order.user ? order.user.name ?: 'Unnamed User' : order.clientName ?: 'N/A' }}</td>
-                        <td>{{ order.user ? order.user.email : order.clientEmail ?: 'N/A' }}</td>
                         <td>{{ order.service ? order.service.name : 'N/A' }}</td>
                         <td>{{ order.status }}</td>
                         <td>{{ order.deliveryDate ? order.deliveryDate|date('Y-m-d') : 'N/A' }}</td>
